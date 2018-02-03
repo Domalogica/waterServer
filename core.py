@@ -1,3 +1,6 @@
+"""
+модуль основной логики
+"""
 from flask import jsonify, abort
 import time
 

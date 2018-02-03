@@ -1,8 +1,14 @@
+"""
+Модуль для работы с DB
+"""
+
 import time
 
+#тестовые данные
 db_wm = [{'wm': 0, 'total_paid': 0, 'water_praise': 400, 'max_volume_tank': 120000, 'last_time': 0},
          {'wm': 1, 'total_paid': 0, 'water_praise': 400, 'max_volume_tank': 120000, 'last_time': 0}]
 
+#тестовые данные
 db_usr = [{'telegram': 23, 'score': 100},
           {'telegram': 24, 'score': 100}]
 
