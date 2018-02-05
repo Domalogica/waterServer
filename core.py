@@ -7,6 +7,8 @@ import time
 import db_menedger
 import billing
 
+UPDATE_NEW_SALE = 'new_sale'
+
 
 def check_connect(wm):
     return time.time() - db_menedger.get_last_time(wm) < 5
@@ -32,3 +34,10 @@ def wm_pull_config(wm):
 def wm_push_config(wm, data):
     result = db_menedger.set_config_wm(wm, data)
     return jsonify(result)
+
+
+def update_wm(method, id, params):
+    if method == UPDATE_NEW_SALE:
+        jsonify({'ok': True})
+    else:
+        abort(400)

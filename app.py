@@ -34,12 +34,16 @@ def gateway_get_handler():
     return core.wm_pull_config(request.args.get('wm', type=int))
 
 
+@app.route('/gateway/update/<method>', methods=['POST'])
+def update_wm(method):
+    core.update_wm(method, request.args.get('wm', type=int), request.get_json())
+    return core.wm_new_date(request.args.get('wm', type=int), request.get_json())
+
+
 @app.route('/gateway/<method>', methods=['POST'])
 def gateway_post_handler(method):
     if method == 'push':
         return core.wm_push_config(request.args.get('wm', type=int), request.get_json())
-    elif method == 'update':
-        return core.wm_new_date(request.args.get('wm', type=int), request.get_json())
 
     return abort(400)
 
