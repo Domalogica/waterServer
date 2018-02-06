@@ -73,9 +73,30 @@ class MysqlPython(object):
         return db_usr[telegram]
 
 
-    def insert_session(self, param):
+    def insert_session(self, wm, sum, **param):
 
-        query = "INSERT INTO %s " % table
+        param.update(wm=wm, sum=sum)
+
+        query = "INSERT INTO sales "
+        keys = param.keys()
+        values = tuple(param.values())
+        query += "(" + ",".join(["`%s`"] * len(keys)) % tuple(keys) + ") VALUES (" + ",".join(["%s"] * len(values)) + ")"
+
+        self.__open(),
+
+        self.__session.execute(query, values)
+        self.__connection.commit()
+        self.__close()
+        # return self.__session.lastrowid
+
+        return {'session': param}
+
+
+    def insert_score(self, sum, type_of_session, **param):
+
+        param.update(sum=sum, type=type_of_session)
+
+        query = "INSERT INTO im_moneys "
         keys = param.keys()
         values = tuple(param.values())
         query += "(" + ",".join(["`%s`"] * len(keys)) % tuple(keys) + ") VALUES (" + ",".join(["%s"] * len(values)) + ")"
@@ -87,7 +108,7 @@ class MysqlPython(object):
         self.__close()
         # return self.__session.lastrowid
 
-        return {'session': session}
+        return {'param': param}
 
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
