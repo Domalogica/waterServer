@@ -38,41 +38,12 @@ class MysqlPython(object):
         except pymysql.Error as e:
             print("Error %d: %s" % (e.args[0],e.args[1]))
 
+
     def __close(self):
         self._session.close()
         self._connection.close()
 
-
-
-
-
-    def get_last_time(wm):
-        return db_wm[wm]['last_time']
-
-
-    def get_config_wm(wm):
-        try:
-            return db_wm[wm]
-        except IndexError:
-            return {'ok': False}
-
-
-    def update_last_time(wm):
-        db_wm[wm].update({'last_time': int(time.time())})
-
-
-    def set_config_wm(wm, data):
-        try:
-            db_wm[wm].update(data)
-            return {'ok': True}
-        except IndexError:
-            return {'ok': False}
-
-
-    def get_user_score(telegram):
-        return db_usr[telegram]
-
-
+    # Функционал для занесения информации о продаже
     def insert_session(self, wm, sum, **param):
 
         param.update(wm=wm, sum=sum)
@@ -91,7 +62,7 @@ class MysqlPython(object):
 
         return {'session': param}
 
-
+    # Функционал для занесения информации об оплате литров
     def insert_score(self, sum, type_of_session, **param):
 
         param.update(sum=sum, type=type_of_session)
@@ -109,6 +80,40 @@ class MysqlPython(object):
         # return self.__session.lastrowid
 
         return {'param': param}
+
+    # Функционал для вывода статистики по выборочным срокам
+    def select_all(self, table, f_r_o_m, to, *args):
+
+        where = "updated >= \'%s\' and updated < \'%s\'" % (f_r_o_m, to)
+
+        result = []
+        query = 'SELECT '
+        keys = args
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM %s' % table
+
+        if where:
+            query += " WHERE %s" % where
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(args, res)))
+        except:
+            result = []
+
+        self.__close()
+
+        return result
 
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
