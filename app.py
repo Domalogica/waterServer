@@ -3,12 +3,14 @@
 здесь будет весь API для работы с внешним сервисами
 """
 from flask import Flask, request, abort, jsonify
-import json
+import json, logging
 
 import core
 
 app = Flask(__name__)
 
+logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'mylog.log')
+logging.info(u'Запуск сервера')
 
 def response_json(d):
     return json.dumps(d)

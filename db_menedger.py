@@ -115,5 +115,33 @@ class MysqlPython(object):
 
         return result
 
+    # Функционал для вывода списка водоматов
+    def select_all_dodomats(self, *args):
+
+        result = []
+        query = 'SELECT '
+        keys = args
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM vodomats'
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(args, res)))
+        except:
+            result = []
+
+        self.__close()
+
+        return result
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
