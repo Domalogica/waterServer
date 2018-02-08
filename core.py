@@ -5,9 +5,9 @@ from flask import jsonify, abort
 import time
 
 import db_menedger
-import billing
+from db_menedger import connect_mysql
 
-UPDATE_NEW_SALE = 'new_sale'
+import billing
 
 
 def check_connect(wm):
@@ -36,8 +36,11 @@ def wm_push_config(wm, data):
     return jsonify(result)
 
 
-def update_wm(method, id, params):
-    if method == UPDATE_NEW_SALE:
-        jsonify({'ok': True})
-    else:
-        abort(400)
+# запись в БД информации о сессии
+def write_session(wm, raw):
+    connect_mysql.insert_session(wm=wm, data=raw)
+
+
+# Функция для парсига HTTP запроса
+def pars_requests(request):
+    return request.args.get('wm', type=int), request.get_json()
