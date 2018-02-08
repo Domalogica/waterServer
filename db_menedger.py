@@ -43,6 +43,7 @@ class MysqlPython(object):
         self._session.close()
         self._connection.close()
 
+
     # Функционал для занесения информации о продаже
     def insert_session(self, wm, sum, **param):
 
