@@ -38,7 +38,9 @@ class MysqlPython(object):
         except pymysql.Error as e:
             print("Error %d: %s" % (e.args[0],e.args[1]))
 
-
+    def __close(self):
+        self._session.close()
+        self._connection.close()
     def __close(self):
         self._session.close()
         self._connection.close()
@@ -46,7 +48,9 @@ class MysqlPython(object):
     # Функционал для занесения информации о продаже
     def insert_session(self, wm, sum, **param):
 
+
         param.update(wm=wm, sum=sum)
+
 
         query = "INSERT INTO sales "
         keys = param.keys()
@@ -143,5 +147,16 @@ class MysqlPython(object):
         self.__close()
 
         return result
+
+           self.__open()
+
+        self.__session.execute(query, values)
+        self.__connection.commit()
+        self.__close()
+        # return self.__session.lastrowid
+
+        return {'session': session}
+
+
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
