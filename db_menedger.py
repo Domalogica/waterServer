@@ -41,41 +41,37 @@ class MysqlPython(object):
     def __close(self):
         self._session.close()
         self._connection.close()
+    def __close(self):
+        self._session.close()
+        self._connection.close()
+
+    # Функционал для занесения информации о продаже
+    def insert_session(self, wm, sum, **param):
 
 
+        param.update(wm=wm, sum=sum)
 
 
+        query = "INSERT INTO sales "
+        keys = param.keys()
+        values = tuple(param.values())
+        query += "(" + ",".join(["`%s`"] * len(keys)) % tuple(keys) + ") VALUES (" + ",".join(["%s"] * len(values)) + ")"
 
-    def get_last_time(wm):
-        return db_wm[wm]['last_time']
+        self.__open(),
 
+        self.__session.execute(query, values)
+        self.__connection.commit()
+        self.__close()
+        # return self.__session.lastrowid
 
-    def get_config_wm(wm):
-        try:
-            return db_wm[wm]
-        except IndexError:
-            return {'ok': False}
+        return {'session': param}
 
+    # Функционал для занесения информации об оплате литров
+    def insert_score(self, sum, type_of_session, **param):
 
-    def update_last_time(wm):
-        db_wm[wm].update({'last_time': int(time.time())})
+        param.update(sum=sum, type=type_of_session)
 
-
-    def set_config_wm(wm, data):
-        try:
-            db_wm[wm].update(data)
-            return {'ok': True}
-        except IndexError:
-            return {'ok': False}
-
-
-    def get_user_score(telegram):
-        return db_usr[telegram]
-
-
-    def insert_session(self, param):
-
-        query = "INSERT INTO %s " % table
+        query = "INSERT INTO im_moneys "
         keys = param.keys()
         values = tuple(param.values())
         query += "(" + ",".join(["`%s`"] * len(keys)) % tuple(keys) + ") VALUES (" + ",".join(["%s"] * len(values)) + ")"
@@ -87,7 +83,80 @@ class MysqlPython(object):
         self.__close()
         # return self.__session.lastrowid
 
+        return {'param': param}
+
+    # Функционал для вывода статистики по выборочным срокам
+    def select_all(self, table, f_r_o_m, to, *args):
+
+        where = "updated >= \'%s\' and updated < \'%s\'" % (f_r_o_m, to)
+
+        result = []
+        query = 'SELECT '
+        keys = args
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM %s' % table
+
+        if where:
+            query += " WHERE %s" % where
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(args, res)))
+        except:
+            result = []
+
+        self.__close()
+
+        return result
+
+    # Функционал для вывода списка водоматов
+    def select_all_dodomats(self, *args):
+
+        result = []
+        query = 'SELECT '
+        keys = args
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM vodomats'
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(args, res)))
+        except:
+            result = []
+
+        self.__close()
+
+        return result
+
+           self.__open()
+
+        self.__session.execute(query, values)
+        self.__connection.commit()
+        self.__close()
+        # return self.__session.lastrowid
+
         return {'session': session}
+
 
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
