@@ -2,8 +2,9 @@
 Модуль для работы с DB
 """
 
-import time
-import pymysql
+import time, pymysql, logging
+
+logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'mylog.log')
 
 # тестовые данные
 db_wm = [{'wm': 0, 'total_paid': 0, 'water_praise': 400, 'max_volume_tank': 120000, 'last_time': 0},
@@ -55,8 +56,13 @@ class MysqlPython(object):
 
         self.__open(),
 
-        self.__session.execute(query, values)
-        self.__connection.commit()
+        try:
+            self.__session.execute(query, values)
+            self.__connection.commit()
+
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
+
         self.__close()
         # return self.__session.lastrowid
 
@@ -74,8 +80,13 @@ class MysqlPython(object):
 
         self.__open()
 
-        self.__session.execute(query, values)
-        self.__connection.commit()
+        try:
+            self.__session.execute(query, values)
+            self.__connection.commit()
+
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
+
         self.__close()
         # return self.__session.lastrowid
 
@@ -108,7 +119,9 @@ class MysqlPython(object):
             row = [item for item in self.__session.fetchall()]
             for res in row:
                 result.append(dict(zip(args, res)))
-        except:
+
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
             result = []
 
         self.__close()
@@ -116,11 +129,11 @@ class MysqlPython(object):
         return result
 
     # Функционал для вывода списка водоматов
-    def select_all_dodomats(self, *args):
+    def select_all_dodomats(self):
 
         result = []
         query = 'SELECT '
-        keys = args
+        keys = list(['wm'])
         l = len(keys) - 1
         for i, key in enumerate(keys):
             query += "`" + key + "`"
@@ -136,8 +149,9 @@ class MysqlPython(object):
         try:
             row = [item for item in self.__session.fetchall()]
             for res in row:
-                result.append(dict(zip(args, res)))
-        except:
+                result.append(dict(zip(keys, res)))
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
             result = []
 
         self.__close()
