@@ -26,8 +26,10 @@ def users():
     return jsonify({'ok': True})
 
 
-@app.route('/connect')
+@app.route('/connect/wm')
 def connect():
+    wm = request.args.get('wm', type=int)
+    user = request.args.get('user', type=int)
     return core.connect_to_wm(request.args.get('wm', type=int), request.args.get('telegram', type=int))
 
 
