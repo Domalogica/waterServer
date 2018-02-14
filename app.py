@@ -9,6 +9,8 @@ import core
 
 app = Flask(__name__)
 
+last_save = {}
+
 logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'mylog.log')
 logging.info(u'Запуск сервера')
 

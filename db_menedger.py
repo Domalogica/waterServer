@@ -94,6 +94,7 @@ class MysqlPython(object):
 
         return {'param': param}
 
+
     # Функционал для вывода статистики по выборочным срокам
     def select_all(self, table, f_r_o_m, to, *args):
 
@@ -121,6 +122,76 @@ class MysqlPython(object):
             row = [item for item in self.__session.fetchall()]
             for res in row:
                 result.append(dict(zip(args, res)))
+
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
+            result = []
+
+        self.__close()
+
+        return result
+
+    def select_status_of_vodomat(self, wm):
+
+        where = "where wm = %s" % wm
+
+        result = []
+        query = 'SELECT '
+        keys = ['state', 'totalPaid', 'leftFromPaid']
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM %s' % table
+
+        if where:
+            query += " WHERE %s" % where
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(keys, res)))
+
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
+            result = []
+
+        self.__close()
+
+        return result
+
+    def select_action_of_vodomat(self, wm):
+
+        where = "where wm = %s" % wm
+
+        result = []
+        query = 'SELECT '
+        keys = ['action']
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM %s' % table
+
+        if where:
+            query += " WHERE %s" % where
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(keys, res)))
 
         except Exception as e:
             logging.error(u'Fatal error %s' % e)
@@ -159,5 +230,70 @@ class MysqlPython(object):
         self.__close()
 
         return result
+
+
+    def select_user(self, telegram):
+
+        result = []
+        query = 'SELECT '
+
+        where = "where telegram = %s" % telegram
+
+        keys = list(['telegram'])
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM vodomats'
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(keys, res)))
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
+            result = []
+
+        self.__close()
+
+        return result
+
+    def select_scoreof_user(self, telegram):
+        result = []
+        query = 'SELECT '
+
+        where = "where telegram = %s" % telegram
+
+        keys = list(['score'])
+        l = len(keys) - 1
+        for i, key in enumerate(keys):
+            query += "`" + key + "`"
+            if i < l:
+                query += ","
+
+        query += 'FROM vodomats'
+
+        self.__open()
+        self.__session.execute(query)
+
+        number_rows = self.__session.rowcount
+        try:
+            row = [item for item in self.__session.fetchall()]
+            for res in row:
+                result.append(dict(zip(keys, res)))
+        except Exception as e:
+            logging.error(u'Fatal error %s' % e)
+            result = []
+
+        self.__close()
+
+        return result
+
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
