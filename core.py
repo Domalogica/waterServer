@@ -2,13 +2,25 @@
 модуль основной логики
 """
 from flask import jsonify, abort
+
 import time
 from app import last_save
 
-import db_menedger
 from db_menedger import connect_mysql
 
-import billing
+
+# функция заглушка
+def wm_task(*args):
+    return args
+
+
+# Подключение к водомау
+def connect_to_wm(wm, user):
+    user_status = False
+    wm_status = False
+    if user_status and wm_status:
+        user_score = user
+        return wm_task(wm, user_score)
 
 
 # запись в БД информации о сессии
