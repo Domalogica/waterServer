@@ -9,7 +9,7 @@ import core
 
 app = Flask(__name__)
 
-last_save = {}
+
 
 logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'mylog.log')
 logging.info(u'Запуск сервера')
@@ -33,6 +33,19 @@ def connect():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
     return core.connect_to_wm(request.args.get('wm', type=int), request.args.get('telegram', type=int))
+
+
+@app.route('/wm/checking_of_connection')
+def checking_of_connection():
+    wm = request.args.get('wm', type=int)
+    return core.checking_of_connection(wm)
+
+@app.route('/wm/save_of_data')
+def save_of_data():
+    wm = request.args.get('wm', type=int)
+    data = request.args.get('data', type=dict)
+    return core.save_of_data(wm, data)
+
 
 
 # Метод для запроса состаяния о водомате

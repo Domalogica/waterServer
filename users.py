@@ -13,6 +13,8 @@ NOT_WM = -1
 NOT_WATER = -2
 WM_BUSY = -3
 
+last_save = {}
+
 
 # Проверка состояния водомата
 def check_stauts_of_vodomat(wm):
@@ -26,17 +28,17 @@ def check_stauts_of_vodomat(wm):
             if settings_of_vodomat['action'] == '0':
 
                 try:
-                    last_save = app.last_save[wm].get('last_save')
+                    lastsave = last_save[wm].get('last_save')
                 except:
-                    response = not_connection_with_the_vodomat
+                    response = NOT_CONNECT_WM
 
-                if last_save > (time.time() - 10):
-                    response = True
+                if lastsave > (time.time() - 10):
+                    response = CONNECT_WM
         else:
-            response = the_vodomat_is_busy
+            response = WM_BUSY
 
     else:
-        response = not_such_vodomat
+        response = NOT_WM
 
     return response
 
