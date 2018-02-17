@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 
 
-logging.basicConfig(format = u'%(levelname)-8s [%(asctime)s] %(message)s', level = logging.DEBUG, filename = u'mylog.log')
-logging.info(u'Запуск сервера')
 
 def response_json(d):
     return json.dumps(d)
@@ -32,7 +30,7 @@ def users():
 def connect():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
-    return core.connect_to_wm(request.args.get('wm', type=int), request.args.get('telegram', type=int))
+    return core.connect_to_wm(wm, user)
 
 
 @app.route('/wm/checking_of_connection')
@@ -56,7 +54,10 @@ def gateway_get_handler():
 
 @app.route('/gateway/notUpdate', methods=['POST'])
 def connection():
-    return jsonify({'ok': True})
+    wm = request.args.get('wm', type=int)
+    up_time = request.args["up_time"]
+    raw = request.get_json()
+    return jsonify(core.next_response(wm, up_time, raw))
 
 
 # Прием новой сессии продаж
@@ -65,21 +66,6 @@ def add_session():
     wm, raw = core.pars_requests(request)
     core.write_session(wm, raw)
     return 'ok'
-
-
-
-
-# @app.route('/gateway/update/<method>', methods=['POST'])
-# def update_wm(method):
-#     core.update_wm(method, request.args.get('wm', type=int), request.get_json())
-#     return core.wm_new_date(request.args.get('wm', type=int), request.get_json())
-#
-#
-# @app.route('/gateway/<method>', methods=['POST'])
-# def gateway_post_handler(method):
-#     if method == 'push':
-#         return core.wm_push_config(request.args.get('wm', type=int), request.get_json())
-#     return abort(400)
 
 
 app.run(host='0.0.0.0', port=8485, debug=True)
