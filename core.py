@@ -2,7 +2,6 @@
 модуль основной логики
 """
 import time
-# from flask import jsonify, abort
 
 import user_model
 import wm_model
@@ -31,3 +30,14 @@ def connect_to_wm(wm, user):
 def pars_requests(request):
     return request.args.get('wm', type=int), request.get_json()
 
+# Проверка связи с водоматом
+def checking_of_connection(wm):
+    return 'Ok'
+
+# Данные от водомата для расчеов и их занесения в бд
+def save_of_data(wm, data):
+    return 'Updated'
+
+# Подключение к водомату
+def connect_to_wm(wm, telegram):
+    return 'Ok'

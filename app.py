@@ -9,7 +9,7 @@ import core
 
 app = Flask(__name__)
 
-last_save = {}
+
 
 
 def response_json(d):
@@ -31,6 +31,19 @@ def connect():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
     return core.connect_to_wm(wm, user)
+
+
+@app.route('/wm/checking_of_connection')
+def checking_of_connection():
+    wm = request.args.get('wm', type=int)
+    return core.checking_of_connection(wm)
+
+@app.route('/wm/save_of_data')
+def save_of_data():
+    wm = request.args.get('wm', type=int)
+    data = request.args.get('data', type=dict)
+    return core.save_of_data(wm, data)
+
 
 
 # Метод для запроса состаяния о водомате
