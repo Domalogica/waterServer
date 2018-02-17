@@ -10,17 +10,6 @@ import core
 app = Flask(__name__)
 
 
-
-
-def response_json(d):
-    return json.dumps(d)
-
-
-@app.route('/')
-def home():
-    return jsonify({'ok': True})
-
-
 @app.route('/users')
 def users():
     return jsonify({'ok': True})
