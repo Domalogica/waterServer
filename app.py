@@ -15,7 +15,7 @@ def users():
     return jsonify({'ok': True})
 
 
-@app.route('/connect/wm')
+@app.route('/app/connect/wm')
 def connect():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
