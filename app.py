@@ -15,42 +15,36 @@ def users():
     return jsonify({'ok': True})
 
 
-@app.route('/connect/wm')
+@app.route('/app/connect/wm')
 def connect():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
     return core.connect_to_wm(wm, user)
 
 
-@app.route('/wm/checking_of_connection')
+@app.route('/wm/checking')
 def checking_of_connection():
-    wm = request.args.get('wm', type=int)
-    return core.checking_of_connection(wm)
-
-@app.route('/wm/save_of_data')
-def save_of_data():
-    wm = request.args.get('wm', type=int)
-    data = request.args.get('data', type=dict)
-    return core.save_of_data(wm, data)
-
-
-
-# Метод для запроса состаяния о водомате
-@app.route('/gateway')
-def gateway_get_handler():
-    return core.wm_pull_config(request.args.get('wm', type=int))
-
-
-@app.route('/gateway/notUpdate', methods=['POST'])
-def connection():
     wm = request.args.get('wm', type=int)
     up_time = request.args["up_time"]
     raw = request.get_json()
     return jsonify(core.next_response(wm, up_time, raw))
 
 
+@app.route('/wm/update')
+def save_of_data():
+    wm = request.args.get('wm', type=int)
+    data = request.args.get('data', type=dict)
+    return core.save_of_data(wm, data)
+
+
+# Метод для запроса состаяния о водомате
+@app.route('/wm')
+def gateway_get_handler():
+    return core.wm_pull_config(request.args.get('wm', type=int))
+
+
 # Прием новой сессии продаж
-@app.route('/gateway/update/session', methods=['POST'])
+@app.route('/wm/update/session', methods=['POST'])
 def add_session():
     wm, raw = core.pars_requests(request)
     core.write_session(wm, raw)

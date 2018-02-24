@@ -3,7 +3,7 @@ import time
 from const_list import *
 
 wm_list = {1: {'link': False, 'full_tank': False, 'not_busy': False, 'task': LINKED, 'next_task': LINKED,
-               'by_till': 0, 'last_time': 0, 'up_time': 0}}
+               'by_till': 0, 'user': 0, 'last_time': 0, 'up_time': 0}}
 
 
 def up_time(wm, up_time=-1):
@@ -32,7 +32,7 @@ def get_task(wm):
 
 
 # установка на следующую задачу
-def set_task(wm, task, balance=0):
+def set_task(wm, task, balance=0, user=0):
     if task == LINKED:
         wm_list[wm].update({'next_task': task})
     elif task == CONNECT_WM_USER:
