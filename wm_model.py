@@ -63,3 +63,7 @@ def checking_status_of_wm(wm):
     else:
         return SUCCESSFUL
 
+# Расчет по счету
+def account_settlement(wm, data):
+
+    return 1

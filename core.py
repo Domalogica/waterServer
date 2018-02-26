@@ -73,11 +73,13 @@ def checking_of_communication(wm):
 # Данные от водомата для расчеов и их занесения в бд
 def write_changes(wm, data):
 
-    user_model.set_state(wm_model.wm_list[wm].get('user'), wm, False)
-
     return 'Updated'
 
-
+# Разбор ответа на отключение
+def parsing_of_answer(wm, data):
+    user_model.set_state(wm_model.wm_list[wm].get('user'), wm, False)
+    wm_model.account_settlement(wm, data)
+    return
 
 def write_session(wm, raw):
     return
