@@ -7,4 +7,5 @@ WM_BUSY = -4
 USER_BUSY = -5
 
 LINKED = 'linked'
-CONNECT_WM_USER = 1
+CONNECT_TO_WM = 1
+DISCONNECT_FROM_WM = 'disconnect'
