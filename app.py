@@ -90,8 +90,9 @@ def answer():
 @app.route('/add/session', methods=['POST'])
 def add_session():
     wm, raw = core.pars_requests(request)
-    core.write_session(wm, raw)
-    return jsonify({'ok': True})
+    sum_sale = request.args.get('sum', type=int)
+    core.write_session(wm, sum_sale, raw)
+    return jsonify(core.communication(wm))
 
 
 app.run(host='0.0.0.0', port=8485, debug=True)

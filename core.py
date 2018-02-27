@@ -76,5 +76,6 @@ def user_info():
 def wm_info():
     return wm_model.wm_list
 
-def write_session(wm, raw):
-    connect_mysql.insert_session(wm, sum, **raw)
+
+def write_session(wm, sum_sale, raw):
+    connect_mysql.insert_session(wm, sum_sale, **raw)
