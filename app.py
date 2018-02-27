@@ -38,7 +38,7 @@ def disconnect():
 def communication():
     # wm = request.args.get('wm', type=int)
     wm = request.json.get('wm')
-    return json.dumps(core.checking_of_communication(wm))
+    return jsonify(core.checking_of_communication(wm))
 
 
 # Обработчик для фиксаций изменений
