@@ -49,6 +49,14 @@ def successful():
     return jsonify(core.communication(wm))
 
 
+@app.route('/disconnect/successful', methods=['POST'])
+def successful():
+    wm = request.args.get('wm', type=int)
+    user = request.args.get('user', type=int)
+    core.connect_successful(wm, user)
+    return jsonify(core.communication(wm))
+
+
 # Обработчик для запросов по отключению от водомата
 @app.route('/app/disconnect/wm')
 def disconnect():

@@ -7,7 +7,6 @@ from const_list import *
 
 
 def connect_successful(wm, user):
-    print(wm, user)
     wm_model.wm_busy(wm)
     user_model.set_state(user, wm)
 
