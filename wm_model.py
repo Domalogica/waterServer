@@ -7,8 +7,8 @@ wm_list = {1: {'communication': False, 'full_tank': False, 'busy': False, 'task'
                'by_till': 0, 'user': 0, 'last_time': 0, 'up_time': 0}}
 
 
-def wm_busy(wm):
-    wm_list[wm]['busy'] = True
+def wm_busy(wm, busy=True):
+    wm_list[wm]['busy'] = busy
 
 
 def up_time(wm, time_up=None):
