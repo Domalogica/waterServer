@@ -4,7 +4,7 @@
 import user_model
 import wm_model
 from const_list import *
-
+from domain_of_db import connect_mysql
 
 def successful(wm, user, what):
     wm_model.wm_busy(wm, what=='connect')
@@ -75,3 +75,6 @@ def user_info():
 
 def wm_info():
     return wm_model.wm_list
+
+def write_session(wm, raw):
+    connect_mysql.insert_session(wm, sum, **raw)
