@@ -15,11 +15,21 @@ app = Flask(__name__)
 
 @app.route('/users')
 def user_info():
+    """
+    Возврашает список пользвателей
+    Нужен для тестов
+    :return:
+    """
     return jsonify(core.user_info())
 
 
 @app.route('/wms')
 def wm_info():
+    """
+    Возврашает список пользвателей
+    Нужен для тестов
+    :return:
+    """
     return jsonify(core.wm_info())
 
 
