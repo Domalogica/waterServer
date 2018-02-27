@@ -41,19 +41,28 @@ def connect():
     return jsonify(core.connect_to_wm(wm, user))
 
 
-@app.route('/connect/successful', methods=['POST'])
+# @app.route('/connect/successful/<>', methods=['POST'])
+# def successful():
+#     wm = request.args.get('wm', type=int)
+#     user = request.args.get('user', type=int)
+#     core.connect_successful(wm, user)
+#     return jsonify(core.communication(wm))
+#
+#
+# @app.route('/disconnect/successful', methods=['POST'])
+# def successful():
+#     wm = request.args.get('wm', type=int)
+#     user = request.args.get('user', type=int)
+#     core.disconnect_successful(wm, user)
+#     return jsonify(core.communication(wm))
+
+
+@app.route('/successful', methods=['POST'])
 def successful():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
-    core.disconnect_successful(wm, user)
-    return jsonify(core.communication(wm))
-
-
-@app.route('/disconnect/successful', methods=['POST'])
-def successful():
-    wm = request.args.get('wm', type=int)
-    user = request.args.get('user', type=int)
-    core.connect_successful(wm, user)
+    what = request.args.get('what', type=str)
+    core.successful(wm, user, what)
     return jsonify(core.communication(wm))
 
 
