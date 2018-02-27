@@ -6,22 +6,13 @@ import wm_model
 from const_list import *
 
 
-# def connect_successful(wm, user):
-#     wm_model.wm_busy(wm)
-#     user_model.set_state(user, wm)
-#
-#
-# def disconnect_successful(wm, user):
-#     wm_model.wm_busy(wm, False)
-#     user_model.set_state(user, 0)
-
 def successful(wm, user, what):
-    if what == 'disconn':
-        wm_model.wm_busy(wm, False)
-        user_model.set_state(user, 0)
-    else:
-        wm_model.wm_busy(wm)
+    wm_model.wm_busy(wm, what=='connect')
+
+    if what == 'connect':
         user_model.set_state(user, wm)
+    else:
+        user_model.set_state(user, 0)
 
 
 def next_response(wm, up_time, raw):

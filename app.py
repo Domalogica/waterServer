@@ -41,28 +41,18 @@ def connect():
     return jsonify(core.connect_to_wm(wm, user))
 
 
-# @app.route('/connect/successful/<>', methods=['POST'])
-# def successful():
-#     wm = request.args.get('wm', type=int)
-#     user = request.args.get('user', type=int)
-#     core.connect_successful(wm, user)
-#     return jsonify(core.communication(wm))
-#
-#
-# @app.route('/disconnect/successful', methods=['POST'])
-# def successful():
-#     wm = request.args.get('wm', type=int)
-#     user = request.args.get('user', type=int)
-#     core.disconnect_successful(wm, user)
-#     return jsonify(core.communication(wm))
-
-
-@app.route('/successful', methods=['POST'])
-def successful():
+@app.route('/successful/<types>', methods=['POST'])
+def successful(types):
+    """
+    обработка сообшений о успешном подключении
+    :param types: тип сообшения
+        :connect = водомат подключился к пользователя
+        :disconnect = водомат отключился от пользователя
+    :return:
+    """
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
-    what = request.args.get('what', type=str)
-    core.successful(wm, user, what)
+    core.successful(wm, user, types)
     return jsonify(core.communication(wm))
 
 
