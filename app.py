@@ -45,7 +45,7 @@ def connect():
 def successful():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
-    core.connect_successful(wm, user)
+    core.disconnect_successful(wm, user)
     return jsonify(core.communication(wm))
 
 
