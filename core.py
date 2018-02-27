@@ -6,6 +6,12 @@ import wm_model
 from const_list import *
 
 
+def connect_successful(wm, user):
+    print(wm, user)
+    wm_model.wm_busy(wm)
+    user_model.set_state(user, wm)
+
+
 def next_response(wm, up_time, raw):
     wm_model.up_time(wm, up_time)
     wm_model.linked(wm)
@@ -14,42 +20,27 @@ def next_response(wm, up_time, raw):
 
 # Подключение к водомау
 def connect_to_wm(wm, user):
-
     user_status = user_model.checking_of_user(user)
-    wm_status = wm_model.checking_status_of_wm(wm)
+    wm_status = wm_model.status_wm(wm)
 
     if user_status:
         if wm_status == SUCCESSFUL or NOT_WATER:
-            wm_model.set_task(wm, CONNECT_WM_USER, user_model.score_of_user(user))
-        return wm_status
+            wm_model.set_task(wm, CONNECT_TO_WM, user_model.score_of_user(user))
+        return {'return': wm_status}
     else:
-        return USER_BUSY
-
+        return {'return': USER_BUSY}
 
 
 # Функция для отключения от водомата
 def disconnect_from_wm(user):
-
     user_status = user_model.checking_of_user(user)
-
-    if not user_status:
-
-        wm = user_model.current_connect(user)
-        wm_status = wm_model.checking_status_of_wm(wm)
-
-        if wm_status == WM_BUSY:
-
-            wm_model.set_task(wm, DISCONNECT_FROM_WM)
-
-            # user_model.set_state(user, wm, True)
-
-            return DISCONNECT_FROM_WM
-        return wm_status
-
+    wm = user_model.current_connect(user)
+    if user_status:
+        return {'return': USER_NOT_BUSY}
     else:
-        return USER_BUSY
-
-
+        wm_model.set_task(wm, DISCONNECT_FROM_WM, user)
+        user_model.set_state(user, False)
+        return {'return': DISCONNECT_FROM_WM}
 
 
 # Функция для парсига HTTP запроса
@@ -58,15 +49,15 @@ def pars_requests(request):
 
 
 # Проверка связи с водоматом
-def checking_of_communication(wm):
+def communication(wm):
     wm_model.linked(wm)
-    return wm_model.get_task(wm)
+    return {'task': wm_model.get_task(wm)}
 
 
 # Данные от водомата для расчеов и их занесения в бд
 def write_changes(wm, data):
-
     return 'Updated'
+
 
 # Разбор ответа на отключение
 def parsing_of_answer(wm, data):
@@ -74,5 +65,10 @@ def parsing_of_answer(wm, data):
     wm_model.account_settlement(wm, data)
     return
 
-def write_session(wm, raw):
-    return
+
+def user_info():
+    return user_model.user_list
+
+
+def wm_info():
+    return wm_model.wm_list

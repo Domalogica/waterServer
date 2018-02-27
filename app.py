@@ -9,33 +9,48 @@ import core
 
 app = Flask(__name__)
 
-t = threading.Thread(target=checking_communication.check_connection)
-t.start()
+# t = threading.Thread(target=checking_communication.check_connection)
+# t.start()
+
 
 @app.route('/users')
-def users():
-    return jsonify({'ok': True})
+def user_info():
+    return jsonify(core.user_info())
+
+
+@app.route('/wms')
+def wm_info():
+    return jsonify(core.wm_info())
+
 
 # Обработчик для запросов по подключению к водомату
 @app.route('/app/connect/wm')
 def connect():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
-    return core.connect_to_wm(wm, user)
+    return jsonify(core.connect_to_wm(wm, user))
+
+
+@app.route('/connect/successful', methods=['POST'])
+def successful():
+    wm = request.args.get('wm', type=int)
+    user = request.args.get('user', type=int)
+    core.connect_successful(wm, user)
+    return jsonify(core.communication(wm))
+
 
 # Обработчик для запросов по отключению от водомата
 @app.route('/app/disconnect/wm')
 def disconnect():
     user = request.args.get('user', type=int)
-    return core.disconnect_from_wm(user)
+    return jsonify(core.disconnect_from_wm(user))
+
 
 # Обработчик для проверки связи
-@app.route('/wm/checking_of_communication', methods=['POST'])
+@app.route('/communication', methods=['POST'])
 def communication():
-
-    # wm = request.args.get('wm', type=int)
-    wm = request.json.get('wm')
-    return json.dumps(core.checking_of_communication(wm))
+    wm = request.args.get('wm', type=int)
+    return jsonify(core.communication(wm))
 
 
 # Обработчик для фиксаций изменений
@@ -44,6 +59,7 @@ def changes_of_wm():
     wm = request.args.get('wm', type=int)
     data = request.args.get('data', type=dict)
     return core.write_changes(wm, data)
+
 
 # Обработчик для фиксаций изменений
 @app.route('/wm/answer')
@@ -58,7 +74,7 @@ def answer():
 def add_session():
     wm, raw = core.pars_requests(request)
     core.write_session(wm, raw)
-    return 'ok'
+    return jsonify({'ok': True})
 
 
 app.run(host='0.0.0.0', port=8485, debug=True)
