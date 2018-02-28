@@ -36,7 +36,15 @@ def wm_info():
 
 
 # Обработчик для запросов по подключению к водомату
-@app.route('/app/connect/wm')
+@app.route('/app/add_user', methods=['POST'])
+def add_user():
+    data = request.get_json()
+    print(data)
+    return jsonify(core.adding_of_user(data))
+
+
+# Обработчик для запросов по подключению к водомату
+@app.route('/app/connect/wm', methods=['POST'])
 def connect():
     wm = request.args.get('wm', type=int)
     user = request.args.get('user', type=int)
@@ -44,7 +52,7 @@ def connect():
 
 
 # Обработчик для запросов по отключению от водомата
-@app.route('/app/disconnect/wm')
+@app.route('/app/disconnect/wm', methods=['POST'])
 def disconnect():
     user = request.args.get('user', type=int)
     return jsonify(core.disconnect_from_wm(user))
@@ -64,11 +72,18 @@ def successful(types):
     core.successful(wm, user, types)
     return jsonify(core.communication(wm))
 
+
 # Обработчик для проверки связи
 @app.route('/communication', methods=['POST'])
 def communication():
     wm = request.args.get('wm', type=int)
     return jsonify(core.communication(wm))
+
+
+@app.route('/developments', methods=['POST'])
+def developments():
+    wm, raw = core.pars_requests(request)
+    return jsonify(core.add_developments(wm, raw))
 
 
 #  Прием новой сессии продаж
@@ -79,4 +94,4 @@ def add_session():
     return jsonify({'ok': True})
 
 
-app.run(host='0.0.0.0', port=8485, debug=True)
+app.run(host='192.168.10.32', port=8485, debug=True)
