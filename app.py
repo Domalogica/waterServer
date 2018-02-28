@@ -3,8 +3,10 @@
 здесь будет весь API для работы с внешним сервисами
 """
 from flask import Flask, request, abort, jsonify
-import json, threading, checking_communication
+import json
+import threading
 
+import checking_communication
 import core
 
 app = Flask(__name__)
@@ -41,6 +43,13 @@ def connect():
     return jsonify(core.connect_to_wm(wm, user))
 
 
+# Обработчик для запросов по отключению от водомата
+@app.route('/app/disconnect/wm')
+def disconnect():
+    user = request.args.get('user', type=int)
+    return jsonify(core.disconnect_from_wm(user))
+
+
 @app.route('/successful/<types>', methods=['POST'])
 def successful(types):
     """
@@ -55,35 +64,11 @@ def successful(types):
     core.successful(wm, user, types)
     return jsonify(core.communication(wm))
 
-
-# Обработчик для запросов по отключению от водомата
-@app.route('/app/disconnect/wm')
-def disconnect():
-    user = request.args.get('user', type=int)
-    return jsonify(core.disconnect_from_wm(user))
-
-
 # Обработчик для проверки связи
 @app.route('/communication', methods=['POST'])
 def communication():
     wm = request.args.get('wm', type=int)
     return jsonify(core.communication(wm))
-
-
-# Обработчик для фиксаций изменений
-@app.route('/wm/changes')
-def changes_of_wm():
-    wm = request.args.get('wm', type=int)
-    data = request.args.get('data', type=dict)
-    return core.write_changes(wm, data)
-
-
-# Обработчик для фиксаций изменений
-@app.route('/wm/answer')
-def answer():
-    wm = request.args.get('wm', type=int)
-    data = request.args.get('data', type=dict)
-    return core.parsing_of_answer(wm, data)
 
 
 #  Прием новой сессии продаж

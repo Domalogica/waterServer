@@ -61,7 +61,7 @@ class MysqlPython(object):
         self.__database = database
 
 
-    def __open(self):
+    def _open(self):
         try:
             cnx = pymysql.connect(self.__host, self.__user, self.__password, self.__database)
             self.__connection = cnx
@@ -69,11 +69,11 @@ class MysqlPython(object):
         except pymysql.Error as e:
             print("Error %d: %s" % (e.args[0],e.args[1]))
 
-    def __close(self):
+    def _close(self):
         self.__session.close()
         self.__connection.close()
 
-    def __one(self, query, args):
+    def _one(self, query, args):
 
         self.__open()
         self.__session.execute(query)
@@ -88,7 +88,7 @@ class MysqlPython(object):
 
         return result
 
-    def __all(self, query, args):
+    def _all(self, query, args):
 
         self.__open()
         self.__session.execute(query)
