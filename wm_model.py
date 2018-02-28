@@ -43,8 +43,7 @@ def set_task(wm, task, balance=0, user=0):
     if task == CONNECT_TO_WM:
         wm_list[wm].update({'by_till': balance, 'user': user})
     elif task == DISCONNECT_FROM_WM:
-        if wm_list[wm]['busy']:
-            wm_list[wm].update({'user': user})
+        wm_list[wm].update({'user': user})
 
 
 # проверка статуса водомата
