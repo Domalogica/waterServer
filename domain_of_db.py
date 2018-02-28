@@ -46,6 +46,7 @@ import pymysql
 
 class MysqlPython(object):
 
+
     __instance   = None
     __host       = None
     __user       = None
@@ -54,6 +55,7 @@ class MysqlPython(object):
     __session    = None
     __connection = None
 
+
     def __init__(self, host='localhost', user='root', password='', database='', charset='utf8'):
         self.__host     = host
         self.__user     = user
@@ -61,7 +63,7 @@ class MysqlPython(object):
         self.__database = database
 
 
-    def __open(self):
+    def _open(self):
         try:
             cnx = pymysql.connect(self.__host, self.__user, self.__password, self.__database)
             self.__connection = cnx
@@ -69,13 +71,15 @@ class MysqlPython(object):
         except pymysql.Error as e:
             print("Error %d: %s" % (e.args[0],e.args[1]))
 
-    def __close(self):
+
+    def _close(self):
         self.__session.close()
         self.__connection.close()
 
-    def __one(self, query, args):
 
-        self.__open()
+    def _one(self, query, args):
+
+        self._open()
         self.__session.execute(query)
 
         try:
@@ -84,13 +88,14 @@ class MysqlPython(object):
         except:
             result = []
 
-        self.__close()
+        self._close()
 
         return result
 
-    def __all(self, query, args):
 
-        self.__open()
+    def _all(self, query, args):
+
+        self._open()
         self.__session.execute(query)
 
         result = []
@@ -101,15 +106,15 @@ class MysqlPython(object):
         except:
             result = []
 
-        self.__close()
+        self._close()
 
         return result
 
 
     # Добавить запись в БД
-    def __insert(self, query, param):
+    def _insert(self, query, param):
 
-        self.__open()
+        self._open()
 
         keys = param.keys()
         values = tuple(param.values())
@@ -124,12 +129,13 @@ class MysqlPython(object):
         except Exception as e:
             print(e)
 
-        self.__close()
+        self._close()
 
         return True
 
+
     # Функция для постройки запроса
-    def __select(self, query, where, *args):
+    def _select(self, query, where, *args):
 
         l = len(args) - 1
         for i, key in enumerate(args):
@@ -150,9 +156,10 @@ class MysqlPython(object):
 
         query = "INSERT INTO sales "
 
-        self.__insert(query, param)
+        self._insert(query, param)
 
         return {'session': param}
+
 
     # Функционал для занесения информации об оплате литров
     def insert_score(self, sum, type_of_session, **param):
@@ -161,9 +168,15 @@ class MysqlPython(object):
 
         query = "INSERT INTO im_moneys "
 
-        self.__insert(query, param)
+        self._insert(query, param)
 
         return {'param': param}
+
+    def insert_user(self, **data):
+
+        query = "INSERT INTO users "
+
+        return self._insert(query, data)
 
 
     # Функция для запроса состояния водомата
@@ -175,9 +188,10 @@ class MysqlPython(object):
 
         query = 'SELECT FROM wm'
 
-        query = self.__select(query, where, *args)
+        query = self._select(query, where, *args)
 
-        return self.__one(query, *args)
+        return self._one(query, *args)
+
 
     # Функция для запроса статистики по выборочным срокам
     def select_statistic(self, table, f_r_o_m, to, *args):
@@ -186,9 +200,10 @@ class MysqlPython(object):
 
         query = 'SELECT FROM %s' % table
 
-        query = self.__select(query, where, *args)
+        query = self._select(query, where, *args)
 
-        return self.__all(query, *args)
+        return self._all(query, *args)
+
 
     # Функция для запроса информации активности водомата
     def select_action_of_wm(self, wm):
@@ -199,9 +214,10 @@ class MysqlPython(object):
 
         args = ['action']
 
-        query = self.__select(query, where, *args)
+        query = self._select(query, where, *args)
 
-        return self.__one(query, *args)
+        return self._one(query, *args)
+
 
     # Функционал для запроса списка водоматов
     def select_wms(self):
@@ -209,34 +225,37 @@ class MysqlPython(object):
         query = 'SELECT FROM wms'
         args = ['wm']
 
-        query = self.__select(query, where=None, *args)
+        query = self._select(query, where=None, *args)
 
-        return self.__all(query, *args)
+        return self._all(query, *args)
+
 
     # Функция для запроса id(проверки) пользователя
-    def select_user(self, telegram):
+    def select_user(self, user):
 
         query = 'SELECT FROM users'
 
-        where = "where telegram = %s" % telegram
+        where = "where user = %s" % user
 
-        args = ['telegram']
+        args = ['user']
 
-        query = self.__select(query, where, *args)
+        query = self._select(query, where, *args)
 
-        return self.__one(query, *args)
+        return self._one(query, *args)
+
 
     # Функция для запроса баланса пользователя
-    def select_balance_of_user(self, telegram):
+    def select_balance_of_user(self, user):
 
         query = 'SELECT FROM users'
 
-        where = "where telegram = %s" % telegram
+        where = "where user = %s" % user
 
         args = ['score']
 
-        query = self.__select(query, where, *args)
+        query = self._select(query, where, *args)
 
-        return self.__one(query, *args)
+        return self._one(query, *args)
+
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
