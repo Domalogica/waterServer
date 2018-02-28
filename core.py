@@ -104,8 +104,16 @@ def user_info():
 def wm_info():
     return wm_model.wm_list
 
+
 def write_session(wm, raw):
     connect_mysql.insert_session(wm, sum, **raw)
 
+
 def add_developments(wm, raw):
     return
+
+
+def add_comment(**data):
+    connect_mysql.insert_comment(**data)
+    return {'return': THANKS_FOR_COMMENT}
+

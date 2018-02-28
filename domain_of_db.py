@@ -178,6 +178,12 @@ class MysqlPython(object):
 
         return self._insert(query, data)
 
+    # Функционал для занесения отзыва
+    def insert_comment(self, **param):
+
+        query = "INSERT INTO reviews "
+
+        return self._insert(query, param)
 
     # Функция для запроса состояния водомата
     def select_status_of_wm(self, wm):

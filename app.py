@@ -35,12 +35,10 @@ def wm_info():
     return jsonify(core.wm_info())
 
 
-# Обработчик для запросов по подключению к водомату
+# Функция для добавления нового пользователя
 @app.route('/app/add_user', methods=['POST'])
 def add_user():
-    data = request.get_json()
-    print(data)
-    return jsonify(core.adding_of_user(data))
+    return jsonify(core.adding_of_user(request.get_json()))
 
 
 # Обработчик для запросов по подключению к водомату
@@ -94,4 +92,12 @@ def add_session():
     return jsonify({'ok': True})
 
 
-app.run(host='192.168.10.32', port=8485, debug=True)
+#  Добавить отзыв
+@app.route('/app/add_review', methods=['POST'])
+def add_review():
+    data = request.get_json()
+    print(data)
+    return jsonify(core.add_comment(**data))
+
+
+app.run(host='0.0.0.0', port=8485, debug=True)
