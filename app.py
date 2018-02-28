@@ -78,14 +78,6 @@ def changes_of_wm():
     return core.write_changes(wm, data)
 
 
-# Обработчик для фиксаций изменений
-@app.route('/wm/answer')
-def answer():
-    wm = request.args.get('wm', type=int)
-    data = request.args.get('data', type=dict)
-    return core.parsing_of_answer(wm, data)
-
-
 #  Прием новой сессии продаж
 @app.route('/add/session', methods=['POST'])
 def add_session():

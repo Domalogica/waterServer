@@ -6,9 +6,9 @@ import wm_model
 from const_list import *
 from domain_of_db import connect_mysql
 
-def successful(wm, user, what):
-    wm_model.wm_busy(wm, what=='connect')
 
+def successful(wm, user, what):
+    wm_model.wm_busy(wm, what == 'connect')
     if what == 'connect':
         user_model.set_state(user, wm)
     else:
@@ -59,14 +59,8 @@ def communication(wm):
 
 # Данные от водомата для расчеов и их занесения в бд
 def write_changes(wm, data):
+
     return 'Updated'
-
-
-# Разбор ответа на отключение
-def parsing_of_answer(wm, data):
-    user_model.set_state(wm_model.wm_list[wm].get('user'), wm, False)
-    wm_model.account_settlement(wm, data)
-    return
 
 
 def user_info():
@@ -79,3 +73,7 @@ def wm_info():
 
 def write_session(wm, sum_sale, raw):
     connect_mysql.insert_session(wm, sum_sale, **raw)
+
+
+def parsing_of_answer():
+    pass

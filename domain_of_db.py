@@ -1,85 +1,41 @@
-# #!/usr/bin/python
-# # -*- coding: utf-8 -*-
-# import pymysql.cursors
-# import time
-#
-#
-#
-# def connect():
-#     connection = pymysql.connect(host='127.0.0.1',
-#                                  user='root',
-#                                  password='7087',
-#                                  db='vodomat',
-#                                  charset='utf8mb4',
-#                                  cursorclass=pymysql.cursors.DictCursor)
-#     return connection
-#
-#
-# def open_db(first, second):
-#
-#     connection = connect()
-#     cursor = connection.cursor()
-#
-#     cursor.execute(first, second)
-#     connection.commit()
-#     cursor.close()
-#     connection.close()
-#
-#     return True
-#
-# def add_host(idv): # Add a new Vodomat
-#
-#   first = "INSERT INTO vs (idv, State, input10Counter, out10Counter, milLitlose, milLitWentOut, milLitContIn, waterPrice, contVolume, totalPaid, sessionPaid, leftFromPaid, container, currentContainerVolume, consumerPump, mainPump, magistralPressure, mainValve, filterValve, washFilValve, tumperMoney, tumperDoor, serviceButton, freeButton, Voltage, cashing, credit, sale, containerMinVolume, billAccept, maxContainerVolume, stateGraph, containerGraph) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-#   second = ()
-#
-#   open_db(first, second)
-#
-#   return True
-#
-
-
-
-#!/usr/bin/env python
 # coding=utf-8
-
 import pymysql
 
-class MysqlPython(object):
 
-    __instance   = None
-    __host       = None
-    __user       = None
-    __password   = None
-    __database   = None
-    __session    = None
-    __connection = None
+class MysqlPython(object):
+    _instance = None
+    _host = None
+    _user = None
+    _password = None
+    _database = None
+    _session = None
+    _connection = None
 
     def __init__(self, host='localhost', user='root', password='', database='', charset='utf8'):
-        self.__host     = host
-        self.__user     = user
-        self.__password = password
-        self.__database = database
-
+        self._host = host
+        self._user = user
+        self._password = password
+        self._database = database
 
     def __open(self):
         try:
-            cnx = pymysql.connect(self.__host, self.__user, self.__password, self.__database)
-            self.__connection = cnx
-            self.__session    = cnx.cursor()
+            cnx = pymysql.connect(self._host, self._user, self._password, self._database)
+            self._connection = cnx
+            self._session = cnx.cursor()
         except pymysql.Error as e:
-            print("Error %d: %s" % (e.args[0],e.args[1]))
+            print("Error %d: %s" % (e.args[0], e.args[1]))
 
     def __close(self):
-        self.__session.close()
-        self.__connection.close()
+        self._session.close()
+        self._connection.close()
 
     def __one(self, query, args):
 
         self.__open()
-        self.__session.execute(query)
+        self._session.execute(query)
 
         try:
-            result = [item for item in self.__session.fetchone()]
+            result = [item for item in self._session.fetchone()]
             result = dict(zip(args, result))
         except:
             result = []
@@ -91,11 +47,11 @@ class MysqlPython(object):
     def __all(self, query, args):
 
         self.__open()
-        self.__session.execute(query)
+        self._session.execute(query)
 
         result = []
         try:
-            row = [item for item in self.__session.fetchall()]
+            row = [item for item in self._session.fetchall()]
             for res in row:
                 result.append(dict(zip(args, res)))
         except:
@@ -104,7 +60,6 @@ class MysqlPython(object):
         self.__close()
 
         return result
-
 
     # Добавить запись в БД
     def __insert(self, query, param):
@@ -118,8 +73,8 @@ class MysqlPython(object):
             ["%s"] * len(values)) + ")"
 
         try:
-            self.__session.execute(query, values)
-            self.__connection.commit()
+            self._session.execute(query, values)
+            self._connection.commit()
 
         except Exception as e:
             print(e)
@@ -142,7 +97,6 @@ class MysqlPython(object):
 
         return query
 
-
     # Функционал для занесения информации о продаже
     def insert_session(self, wm, sum, **param):
 
@@ -164,7 +118,6 @@ class MysqlPython(object):
         self.__insert(query, param)
 
         return {'param': param}
-
 
     # Функция для запроса состояния водомата
     def select_status_of_wm(self, wm):
@@ -238,5 +191,6 @@ class MysqlPython(object):
         query = self.__select(query, where, *args)
 
         return self.__one(query, *args)
+
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
