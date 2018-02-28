@@ -8,7 +8,7 @@ from domain_of_db import connect_mysql
 
 
 def successful(wm, user, what):
-    wm_model.wm_busy(wm, what=='connect')
+    wm_model.wm_busy(wm, what == 'connect')
 
     if what == 'connect':
         user_model.set_state(user, wm)
@@ -22,6 +22,7 @@ def next_response(wm, up_time, raw):
     return {'task': wm_model.get_task(wm)}
 
 
+# Добавить нового пользователя
 def adding_of_user(data):
 
     # if connect_mysql.select_user(data['user']) == []:
@@ -85,7 +86,6 @@ def pars_requests(request):
 
 # Проверка связи с водоматом
 def communication(wm):
-
     wm_model.linked(wm)
     return {'task': wm_model.get_task(wm)}
 
@@ -105,15 +105,28 @@ def wm_info():
     return wm_model.wm_list
 
 
+# Функция для записи новой сессии
 def write_session(wm, raw):
     connect_mysql.insert_session(wm, sum, **raw)
 
 
+# Функция для добавления событий(изменений который зачастуют в водомате)
 def add_developments(wm, raw):
     return
 
 
+# Функция для добавления нового комментария
 def add_comment(**data):
     connect_mysql.insert_comment(**data)
     return {'return': THANKS_FOR_COMMENT}
 
+
+# Функция для добавления новых рекомендаций
+def add_recommned(**data):
+    connect_mysql.insert_recommneds(**data)
+    return {'return': THANKS_FOR_RECOMMENDS}
+
+
+# Функция для запроса баланса
+def get_score(user):
+    return user_model.user_list[user].get('balance')

@@ -100,4 +100,18 @@ def add_review():
     return jsonify(core.add_comment(**data))
 
 
+#  Рекомендовать место
+@app.route('/app/recommend_place', methods=['POST'])
+def recommend_place():
+    data = request.get_json()
+    print(data)
+    return jsonify(core.add_recommned(**data))
+
+
+#  Рекомендовать место
+@app.route('/app/get_score', methods=['GET'])
+def score():
+    user = request.args.get('wm', type=int)
+    return jsonify(core.get_score(user))
+
 app.run(host='0.0.0.0', port=8485, debug=True)

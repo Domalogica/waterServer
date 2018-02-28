@@ -172,11 +172,13 @@ class MysqlPython(object):
 
         return {'param': param}
 
+
     def insert_user(self, **data):
 
         query = "INSERT INTO users "
 
         return self._insert(query, data)
+
 
     # Функционал для занесения отзыва
     def insert_comment(self, **param):
@@ -184,6 +186,15 @@ class MysqlPython(object):
         query = "INSERT INTO reviews "
 
         return self._insert(query, param)
+
+
+    # Функционал для занесения рекомендаций
+    def insert_recommneds(self, **param):
+
+        query = "INSERT INTO recommends "
+
+        return self._insert(query, param)
+
 
     # Функция для запроса состояния водомата
     def select_status_of_wm(self, wm):
