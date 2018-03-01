@@ -90,11 +90,11 @@ def communication(wm):
     return {'task': wm_model.get_task(wm)}
 
 
-# Разбор ответа на отключение
-def parsing_of_answer(wm, data):
-    user_model.set_state(wm_model.wm_list[wm].get('user'), wm, False)
-    wm_model.account_settlement(wm, data)
-    return
+# # Разбор ответа на отключение
+# def parsing_of_answer(wm, data):
+#     user_model.set_state(wm_model.wm_list[wm].get('user'), wm, False)
+#     wm_model.account_settlement(wm, data)
+#     return
 
 
 def user_info():
@@ -111,8 +111,9 @@ def write_session(wm, raw):
 
 
 # Функция для добавления событий(изменений который зачастуют в водомате)
-def add_developments(wm, raw):
-    return
+def add_event(wm, raw):
+    # в дб
+    return connect_mysql.insert_events(wm, **raw)
 
 
 # Функция для добавления нового комментария

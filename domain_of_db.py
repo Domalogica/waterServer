@@ -196,6 +196,18 @@ class MysqlPython(object):
         return self._insert(query, param)
 
 
+    # Функционал для занесения событий в водомате
+    def insert_events(self, wm, **param):
+
+        param.update(wm=wm)
+
+        query = "INSERT INTO event "
+
+        self._insert(query, param)
+
+        return {'event': param}
+
+
     # Функция для запроса состояния водомата
     def select_status_of_wm(self, wm):
 
