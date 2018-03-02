@@ -1,51 +1,8 @@
-# #!/usr/bin/python
-# # -*- coding: utf-8 -*-
-# import pymysql.cursors
-# import time
-#
-#
-#
-# def connect():
-#     connection = pymysql.connect(host='127.0.0.1',
-#                                  user='root',
-#                                  password='7087',
-#                                  db='vodomat',
-#                                  charset='utf8mb4',
-#                                  cursorclass=pymysql.cursors.DictCursor)
-#     return connection
-#
-#
-# def open_db(first, second):
-#
-#     connection = connect()
-#     cursor = connection.cursor()
-#
-#     cursor.execute(first, second)
-#     connection.commit()
-#     cursor.close()
-#     connection.close()
-#
-#     return True
-#
-# def add_host(idv): # Add a new Vodomat
-#
-#   first = "INSERT INTO vs (idv, State, input10Counter, out10Counter, milLitlose, milLitWentOut, milLitContIn, waterPrice, contVolume, totalPaid, sessionPaid, leftFromPaid, container, currentContainerVolume, consumerPump, mainPump, magistralPressure, mainValve, filterValve, washFilValve, tumperMoney, tumperDoor, serviceButton, freeButton, Voltage, cashing, credit, sale, containerMinVolume, billAccept, maxContainerVolume, stateGraph, containerGraph) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-#   second = ()
-#
-#   open_db(first, second)
-#
-#   return True
-#
-
-
-
-#!/usr/bin/env python
 # coding=utf-8
 
 import pymysql
 
 class MysqlPython(object):
-
 
     __instance   = None
     __host       = None
@@ -147,7 +104,6 @@ class MysqlPython(object):
             query += " WHERE %s" % where
 
         return query
-
 
     # Функционал для занесения информации о продаже
     def insert_session(self, wm, sum, **param):

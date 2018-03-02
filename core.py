@@ -9,7 +9,7 @@ from domain_of_db import connect_mysql
 
 def successful(wm, user, what):
     wm_model.wm_busy(wm, what == 'connect')
-
+    
     if what == 'connect':
         user_model.set_state(user, wm)
     else:
@@ -90,12 +90,6 @@ def communication(wm):
     return {'task': wm_model.get_task(wm)}
 
 
-# # Разбор ответа на отключение
-# def parsing_of_answer(wm, data):
-#     user_model.set_state(wm_model.wm_list[wm].get('user'), wm, False)
-#     wm_model.account_settlement(wm, data)
-#     return
-
 
 def user_info():
     return user_model.user_list
@@ -105,9 +99,8 @@ def wm_info():
     return wm_model.wm_list
 
 
-# Функция для записи новой сессии
-def write_session(wm, raw):
-    connect_mysql.insert_session(wm, sum, **raw)
+def write_session(wm, sum_sale, raw):
+    connect_mysql.insert_session(wm, sum_sale, **raw)
 
 
 # Функция для добавления событий(изменений который зачастуют в водомате)
