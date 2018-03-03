@@ -112,7 +112,9 @@ class MysqlPython(object):
 
 
     # Добавить запись в БД
-    def _insert(self, query, param):
+    def _insert(self, table, param):
+
+        query = "INSERT INTO %s " % table
 
         self._open()
 
@@ -158,9 +160,7 @@ class MysqlPython(object):
 
         param.update(wm=wm, sum=sum)
 
-        query = "INSERT INTO sales "
-
-        self._insert(query, param)
+        self._insert('sales', param)
 
         return {'session': param}
 
@@ -170,34 +170,23 @@ class MysqlPython(object):
 
         param.update(sum=sum, type=type_of_session)
 
-        query = "INSERT INTO im_moneys "
-
-        self._insert(query, param)
+        self._insert('im_moneys', param)
 
         return {'param': param}
 
 
     def insert_user(self, **data):
-
-        query = "INSERT INTO users "
-
-        return self._insert(query, data)
+        return self._insert('users', data)
 
 
     # Функционал для занесения отзыва
     def insert_comment(self, **param):
-
-        query = "INSERT INTO reviews "
-
-        return self._insert(query, param)
+        return self._insert('reviews', param)
 
 
     # Функционал для занесения рекомендаций
     def insert_recommneds(self, **param):
-
-        query = "INSERT INTO recommends "
-
-        return self._insert(query, param)
+        return self._insert('recommends', param)
 
 
     # Функционал для занесения событий в водомате
@@ -205,9 +194,7 @@ class MysqlPython(object):
 
         param.update(wm=wm)
 
-        query = "INSERT INTO event "
-
-        self._insert(query, param)
+        self._insert('loging', param)
 
         return {'event': param}
 
