@@ -9,7 +9,6 @@ from domain_of_db import connect_mysql
 
 def successful(wm, user, what):
     wm_model.wm_busy(wm, what == 'connect')
-    
     if what == 'connect':
         user_model.set_state(user, wm)
     else:
