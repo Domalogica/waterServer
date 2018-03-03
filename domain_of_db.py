@@ -185,25 +185,19 @@ class MysqlPython(object):
 
         where = "where wm = %s" % wm
 
-        query = 'SELECT FROM *'
+        query = self._select('vodomats', where, *['action'])
 
-        args = ['action']
-
-        query = self._select(query, where, *args)
-
-        return self._one(query, *args)
+        return self._one(query, *['action'])
 
 
     # Функционал для запроса списка водоматов
     def select_wms(self):
 
-        args = ['wm']
-
-        query = self._select('wms', None, *args)
+        query = self._select('wms', None, *['wm'])
 
         print(query)
 
-        return self._all(query, *args)
+        return self._all(query, *['wm'])
 
 
     # Функция для запроса id(проверки) пользователя
@@ -211,11 +205,9 @@ class MysqlPython(object):
 
         where = "where user = %s" % user
 
-        args = ['user']
+        query = self._select('users', where, *['user'])
 
-        query = self._select('users', where, *args)
-
-        return self._one(query, *args)
+        return self._one(query, *['user'])
 
 
     # Функция для запроса баланса пользователя
@@ -223,11 +215,9 @@ class MysqlPython(object):
 
         where = "where user = %s" % user
 
-        args = ['score']
+        query = self._select('users', where, *['score'])
 
-        query = self._select('users', where, *args)
-
-        return self._one(query, *args)
+        return self._one(query, *['score'])
 
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
