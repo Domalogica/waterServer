@@ -2,6 +2,34 @@
 
 import pymysql
 
+QUOTEA = '\''
+NOT_QUOTEA = ''
+
+
+def generate_where(**kwargs):
+    try:
+        keys = list(kwargs.items())
+        return 'WHERE %s=\'%s\' ' % (keys[0][0], keys[0][1])
+    except IndexError:
+        return ''
+
+
+def generate_keys(*args):
+    if len(args) > 0:
+        return ','.join(args)
+    else:
+        return "*"
+
+
+def generate_values(**kwargs):
+    keys = kwargs.keys()
+    values = tuple(kwargs.values())
+    return "(%s) VALUE (%s)" % (generate(NOT_QUOTEA, keys), generate(QUOTEA, values))
+
+
+def generate(quotes, *args):
+    return ','.join(['{}%s{}'.format(quotes, quotes)] * len(args)) % args
+
 
 class MysqlPython(object):
     __instance = None
@@ -85,7 +113,9 @@ class MysqlPython(object):
         return True
 
     # Функция для постройки запроса
-    def _select(self, query, where, *args):
+    def _select(self, query, where=None, *args):
+
+
 
         l = len(args) - 1
         for i, key in enumerate(args):
@@ -197,9 +227,7 @@ class MysqlPython(object):
 
         query = 'SELECT FROM wms'
         args = ['wm']
-
-        query = self._select(query, where=None, *args)
-
+        query = self._select(query, None, *args)
         return self._all(query, *args)
 
     # Функция для запроса id(проверки) пользователя
@@ -229,4 +257,4 @@ class MysqlPython(object):
         return self._one(query, *args)
 
 
-connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
+connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'mydb')

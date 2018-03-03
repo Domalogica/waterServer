@@ -2,6 +2,9 @@ import time
 
 
 from const_list import *
+from domain_of_db import connect_mysql
+
+print(connect_mysql.select_wms())
 
 wm_list = {1: {'communication': False, 'full_tank': False, 'busy': False, 'task': LINKED, 'next_task': LINKED,
                'by_till': 0, 'user': 0, 'last_time': 0, 'up_time': 0}}
