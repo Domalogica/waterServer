@@ -1,62 +1,39 @@
+#!/usr/bin/env python
 # coding=utf-8
 
 import pymysql
 
-QUOTEA = '\''
-NOT_QUOTEA = ''
-
-
-def generate_where(**kwargs):
-    try:
-        keys = list(kwargs.items())
-        return 'WHERE %s=\'%s\' ' % (keys[0][0], keys[0][1])
-    except IndexError:
-        return ''
-
-
-def generate_keys(*args):
-    if len(args) > 0:
-        return ','.join(args)
-    else:
-        return "*"
-
-
-def generate_values(**kwargs):
-    keys = kwargs.keys()
-    values = tuple(kwargs.values())
-    return "(%s) VALUE (%s)" % (generate(NOT_QUOTEA, keys), generate(QUOTEA, values))
-
-
-def generate(quotes, *args):
-    return ','.join(['{}%s{}'.format(quotes, quotes)] * len(args)) % args
-
-
 class MysqlPython(object):
-    __instance = None
-    __host = None
-    __user = None
-    __password = None
-    __database = None
-    __session = None
+
+
+    __instance   = None
+    __host       = None
+    __user       = None
+    __password   = None
+    __database   = None
+    __session    = None
     __connection = None
 
     def __init__(self, host='localhost', user='root', password='', database='', charset='utf8'):
-        self.__host = host
-        self.__user = user
+        self.__host     = host
+        self.__user     = user
         self.__password = password
         self.__database = database
+
 
     def _open(self):
         try:
             cnx = pymysql.connect(self.__host, self.__user, self.__password, self.__database)
             self.__connection = cnx
-            self.__session = cnx.cursor()
+            self.__session    = cnx.cursor()
         except pymysql.Error as e:
-            print("Error %d: %s" % (e.args[0], e.args[1]))
+            print("Error %d: %s" % (e.args[0],e.args[1]))
+
 
     def _close(self):
         self.__session.close()
         self.__connection.close()
+
 
     def _one(self, query, args):
 
@@ -72,6 +49,7 @@ class MysqlPython(object):
         self._close()
 
         return result
+
 
     def _all(self, query, args):
 
@@ -90,8 +68,11 @@ class MysqlPython(object):
 
         return result
 
+
     # Добавить запись в БД
-    def _insert(self, query, param):
+    def _insert(self, table, param):
+
+        query = "INSERT INTO %s " % table
 
         self._open()
 
@@ -111,6 +92,7 @@ class MysqlPython(object):
         self._close()
 
         return True
+
 
     # Функция для постройки запроса
     def _select(self, table, where, *args):
@@ -136,44 +118,33 @@ class MysqlPython(object):
 
         param.update(wm=wm, sum=sum)
 
-        query = "INSERT INTO sales "
-
-        self._insert(query, param)
+        self._insert('sales', param)
 
         return {'session': param}
+
 
     # Функционал для занесения информации об оплате литров
     def insert_score(self, sum, type_of_session, **param):
 
         param.update(sum=sum, type=type_of_session)
 
-        query = "INSERT INTO im_moneys "
-
-        self._insert(query, param)
+        self._insert('im_moneys', param)
 
         return {'param': param}
 
+
     def insert_user(self, **data):
-
-        query = "INSERT INTO users "
-
-        return self._insert(query, data)
+        return self._insert('users', data)
 
 
     # Функционал для занесения отзыва
     def insert_comment(self, **param):
-
-        query = "INSERT INTO reviews "
-
-        return self._insert(query, param)
+        return self._insert('reviews', param)
 
 
     # Функционал для занесения рекомендаций
     def insert_recommneds(self, **param):
-
-        query = "INSERT INTO recommends "
-
-        return self._insert(query, param)
+        return self._insert('recommends', param)
 
 
     # Функционал для занесения событий в водомате
@@ -181,9 +152,7 @@ class MysqlPython(object):
 
         param.update(wm=wm)
 
-        query = "INSERT INTO event "
-
-        self._insert(query, param)
+        self._insert('loging', param)
 
         return {'event': param}
 
@@ -199,6 +168,7 @@ class MysqlPython(object):
 
         return self._one(query, *args)
 
+
     # Функция для запроса статистики по выборочным срокам
     def select_statistic(self, table, f_r_o_m, to, *args):
 
@@ -208,56 +178,45 @@ class MysqlPython(object):
 
         return self._all(query, *args)
 
+
     # Функция для запроса информации активности водомата
     def select_action_of_wm(self, wm):
 
         where = "where wm = %s" % wm
 
-        query = 'SELECT FROM *'
+        query = self._select('vodomats', where, *['action'])
 
-        args = ['action']
+        return self._one(query, *['action'])
 
-        query = self._select(query, where, *args)
-
-        return self._one(query, *args)
 
     # Функционал для запроса списка водоматов
     def select_wms(self):
 
-        query = 'SELECT FROM wms'
-        args = ['wm']
-
-        query = self._select('wms', None, *args)
+        query = self._select('wms', None, *['wm'])
 
         print(query)
 
-        return self._all(query, *args)
+        return self._all(query, *['wm'])
+
 
     # Функция для запроса id(проверки) пользователя
     def select_user(self, user):
 
-        query = 'SELECT FROM users'
-
         where = "where user = %s" % user
 
-        args = ['user']
+        query = self._select('users', where, *['user'])
 
-        query = self._select('users', where, *args)
+        return self._one(query, *['user'])
 
-        return self._one(query, *args)
 
     # Функция для запроса баланса пользователя
     def select_balance_of_user(self, user):
 
-        query = 'SELECT FROM users'
-
         where = "where user = %s" % user
 
-        args = ['score']
+        query = self._select('users', where, *['score'])
 
-        query = self._select('users', where, *args)
-
-        return self._one(query, *args)
+        return self._one(query, *['score'])
 
 
-connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'mydb')
+connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
