@@ -113,9 +113,9 @@ class MysqlPython(object):
         return True
 
     # Функция для постройки запроса
-    def _select(self, query, where=None, *args):
+    def _select(self, table, where, *args):
 
-
+        query = 'SELECT '
 
         l = len(args) - 1
         for i, key in enumerate(args):
@@ -126,7 +126,10 @@ class MysqlPython(object):
         if where:
             query += " WHERE %s" % where
 
+        query += 'FROM %s' % table
+
         return query
+
 
     # Функционал для занесения информации о продаже
     def insert_session(self, wm, sum, **param):
@@ -192,9 +195,7 @@ class MysqlPython(object):
 
         where = "where wm = %s" % wm
 
-        query = 'SELECT FROM wm'
-
-        query = self._select(query, where, *args)
+        query = self._select('wm', where, *args)
 
         return self._one(query, *args)
 
@@ -203,9 +204,7 @@ class MysqlPython(object):
 
         where = "updated >= \'%s\' and updated < \'%s\'" % (f_r_o_m, to)
 
-        query = 'SELECT FROM %s' % table
-
-        query = self._select(query, where, *args)
+        query = self._select(table, where, *args)
 
         return self._all(query, *args)
 
@@ -227,7 +226,11 @@ class MysqlPython(object):
 
         query = 'SELECT FROM wms'
         args = ['wm']
-        query = self._select(query, None, *args)
+
+        query = self._select('wms', None, *args)
+
+        print(query)
+
         return self._all(query, *args)
 
     # Функция для запроса id(проверки) пользователя
@@ -239,7 +242,7 @@ class MysqlPython(object):
 
         args = ['user']
 
-        query = self._select(query, where, *args)
+        query = self._select('users', where, *args)
 
         return self._one(query, *args)
 
@@ -252,7 +255,7 @@ class MysqlPython(object):
 
         args = ['score']
 
-        query = self._select(query, where, *args)
+        query = self._select('users', where, *args)
 
         return self._one(query, *args)
 
