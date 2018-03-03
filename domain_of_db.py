@@ -193,11 +193,21 @@ class MysqlPython(object):
     # Функционал для запроса списка водоматов
     def select_wms(self):
 
-        query = self._select('wms', None, *['wm'])
+        query = self._select('wms', None, *['*'])
 
         print(query)
 
-        return self._all(query, *['wm'])
+        return self._all(query, *['*'])
+
+
+    # Функционал для запроса списка водоматов
+    def select_users(self):
+
+        query = self._select('users', None, *['*'])
+
+        print(query)
+
+        return self._all(query, *['*'])
 
 
     # Функция для запроса id(проверки) пользователя
