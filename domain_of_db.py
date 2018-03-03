@@ -1,9 +1,49 @@
+# #!/usr/bin/python
+# # -*- coding: utf-8 -*-
+# import pymysql.cursors
+# import time
+#
+#
+#
+# def connect():
+#     connection = pymysql.connect(host='127.0.0.1',
+#                                  user='root',
+#                                  password='7087',
+#                                  db='vodomat',
+#                                  charset='utf8mb4',
+#                                  cursorclass=pymysql.cursors.DictCursor)
+#     return connection
+#
+#
+# def open_db(first, second):
+#
+#     connection = connect()
+#     cursor = connection.cursor()
+#
+#     cursor.execute(first, second)
+#     connection.commit()
+#     cursor.close()
+#     connection.close()
+#
+#     return True
+#
+# def add_host(idv): # Add a new Vodomat
+#
+#   first = "INSERT INTO vs (idv, State, input10Counter, out10Counter, milLitlose, milLitWentOut, milLitContIn, waterPrice, contVolume, totalPaid, sessionPaid, leftFromPaid, container, currentContainerVolume, consumerPump, mainPump, magistralPressure, mainValve, filterValve, washFilValve, tumperMoney, tumperDoor, serviceButton, freeButton, Voltage, cashing, credit, sale, containerMinVolume, billAccept, maxContainerVolume, stateGraph, containerGraph) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+#   second = ()
+#
+#   open_db(first, second)
+#
+#   return True
+#
+
+
+
+#!/usr/bin/env python
 # coding=utf-8
 
 import pymysql
 
-
-class MysqlPython(object):
     __instance = None
     __host = None
     __user = None
@@ -85,7 +125,9 @@ class MysqlPython(object):
         return True
 
     # Функция для постройки запроса
-    def _select(self, query, where, *args):
+    def _select(self, table, where, *args):
+
+        query = 'SELECT '
 
         l = len(args) - 1
         for i, key in enumerate(args):
@@ -96,7 +138,10 @@ class MysqlPython(object):
         if where:
             query += " WHERE %s" % where
 
+        query += 'FROM %s' % table
+
         return query
+
 
     # Функционал для занесения информации о продаже
     def insert_session(self, wm, sum, **param):
@@ -162,9 +207,7 @@ class MysqlPython(object):
 
         where = "where wm = %s" % wm
 
-        query = 'SELECT FROM wm'
-
-        query = self._select(query, where, *args)
+        query = self._select('wm', where, *args)
 
         return self._one(query, *args)
 
@@ -173,9 +216,7 @@ class MysqlPython(object):
 
         where = "updated >= \'%s\' and updated < \'%s\'" % (f_r_o_m, to)
 
-        query = 'SELECT FROM %s' % table
-
-        query = self._select(query, where, *args)
+        query = self._select(table, where, *args)
 
         return self._all(query, *args)
 
@@ -195,38 +236,39 @@ class MysqlPython(object):
     # Функционал для запроса списка водоматов
     def select_wms(self):
 
-        query = 'SELECT FROM wms'
         args = ['wm']
 
-        query = self._select(query, where=None, *args)
+        query = self._select('wms', None, *args)
+
+        print(query)
 
         return self._all(query, *args)
 
     # Функция для запроса id(проверки) пользователя
     def select_user(self, user):
 
-        query = 'SELECT FROM users'
-
         where = "where user = %s" % user
 
         args = ['user']
 
-        query = self._select(query, where, *args)
+        query = self._select('users', where, *args)
 
         return self._one(query, *args)
 
     # Функция для запроса баланса пользователя
     def select_balance_of_user(self, user):
 
-        query = 'SELECT FROM users'
-
         where = "where user = %s" % user
 
         args = ['score']
 
-        query = self._select(query, where, *args)
+        query = self._select('users', where, *args)
 
         return self._one(query, *args)
 
 
 connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'WB')
+
+
+
+print(connect_mysql.select_wms())
