@@ -49,7 +49,10 @@ class MysqlPython(object):
     def _all(self, query, args):
 
         self._open()
-        self.__session.execute(query)
+        try:
+            self.__session.execute(query)
+        except Exception as e:
+            print(e)
 
         result = []
         try:
@@ -99,10 +102,10 @@ class MysqlPython(object):
             if i < l:
                 query += ","
 
+        query += ' FROM %s ' % table
+
         if where:
             query += " WHERE %s" % where
-
-        query += 'FROM %s' % table
 
         return query
 
@@ -176,11 +179,25 @@ class MysqlPython(object):
     # Функционал для запроса списка водоматов
     def select_wms(self):
 
-        query = self._select('wms', None, *['wm'])
+        args = ['communication', 'setted', 'street', 'wm', 'comment', 'id', 'full_tank', 'busy', 'task', 'next_task', 'by_till', 'current_connect', 'last_time', 'up_time']
+
+        query = self._select('wms', None, *args)
 
         print(query)
 
-        return self._all(query, *['wm'])
+        return self._all(query, args)
+
+
+    # Функционал для запроса списка водоматов
+    def select_users(self):
+
+        args = ['user', 'current_connect', 'username', 'first_name', 'last_name', 'login', 'balance', 'free_water', 'registered', 'number']
+
+        query = self._select('users', None, *args)
+
+        print(query)
+
+        return self._all(query, args)
 
     # Функция для запроса id(проверки) пользователя
     def select_user(self, user):
@@ -201,4 +218,4 @@ class MysqlPython(object):
         return self._one(query, *['score'])
 
 
-connect_mysql = MysqlPython('127.0.0.1', 'root', '7087', 'mydb')
+connect_mysql = MysqlPython('192.168.10.30', 'lion', '123', 'mydb')

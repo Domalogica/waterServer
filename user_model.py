@@ -1,6 +1,21 @@
 # from const_list import *
+from domain_of_db import connect_mysql
+import datetime
+
+list_of_users = connect_mysql.select_users()
+print(list_of_users)
 
 user_list = {1: {'balance': 10, 'current_connect': 0}}
+
+for user in list_of_users:
+    user_list.update({user['user']: user})
+
+print('Users -> %s' % user_list)
+#
+# for user in list_of_users:
+#     wm_list.update({wm['wm']:{'communication': False, 'full_tank': False, 'busy': False, 'task': LINKED, 'next_task': LINKED,
+#                'by_till': 0, 'user': 0, 'last_time': wm['last_time'], 'up_time': 0, 'street': wm['street']}})
+#
 
 
 # Проверка состояния пользователя
