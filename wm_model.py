@@ -2,6 +2,9 @@ import time
 
 from domain_of_db import connect_mysql
 from const_list import *
+from domain_of_db import connect_mysql
+
+print(connect_mysql.select_wms())
 
 vodomats = [{'wm': 121, 'street': 'пр.Акушинского 30'},
             {'wm': 221, 'street': 'ул.Научный городок 1'},
